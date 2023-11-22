@@ -1,62 +1,74 @@
-import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-tables',
   templateUrl: './tables.component.html',
   styleUrls: ['./tables.component.scss']
 })
-export class TablesComponent {
-  name = 'Angular';
+export class TablesComponent implements OnInit{
+  @Input()
+  child!: any[];
+  items: any=[]
+  start: any;
+  last: any;
+  pagesixe: any;
+  rows: any[] = []; // Your actual data
+  filteredRows: any[] = [];
+  searchText: any;
+  i: any;
+  name!: string;
+ 
+constructor(private router: Router,private http: HttpClient){
+  // for (let i = 1; i <= 100; i++) {
+  //   this.maindata.push(`item ${i}`);
+  // }
+}
+p: number = 1;
+ ngOnInit(): void {
+  this.http.get("https://jsonplaceholder.typicode.com/todos").subscribe((data: any) => {
+      
+        this.items = data
+        console.log(data)
+      });
+      this.pagesixe=20
+   
+ }
 
-  columns = ['name', 'age', ''];
-
-
-  data = [
-    {
-      "_id": "5d2bdad4d23987041dc5c8d6",
-      "age": 29,
-      "name": "William",
-      "company": "FLEXIGEN",
-      "email": "undefined.undefined@flexigen.co.uk",
-      "phone": "+1 (893) 475-3508",
-      "address": "807 Sharon Street, Boomer, Missouri, 3484"
-    },
-    {
-      "_id": "5d2bdad4035e6cad7b39a9c8",
-      "age": 21,
-      "name": "Atkinson",
-      "company": "PULZE",
-      "email": "undefined.undefined@pulze.tv",
-      "phone": "+1 (901) 541-2875",
-      "address": "898 Arkansas Drive, Gloucester, Delaware, 8173"
-    },
-    {
-      "_id": "5d2bdad4e34f03ad91d999bd",
-      "age": 21,
-      "name": "Gretchen",
-      "company": "ENVIRE",
-      "email": "undefined.undefined@envire.biz",
-      "phone": "+1 (840) 587-2019",
-      "address": "635 Berkeley Place, Freeburn, Idaho, 866"
-    },
-    {
-      "_id": "5d2bdad4f5a5c141f34adc93",
-      "age": 20,
-      "name": "Olson",
-      "company": "MARTGO",
-      "email": "undefined.undefined@martgo.us",
-      "phone": "+1 (800) 408-2978",
-      "address": "845 Bay Street, Johnsonburg, Montana, 7584"
-    },
-    {
-      "_id": "5d2bdad48a0315859623e102",
-      "age": 33,
-      "name": "Camacho",
-      "company": "RAMJOB",
-      "email": "undefined.undefined@ramjob.name",
-      "phone": "+1 (864) 546-3079",
-      "address": "287 Micieli Place, Marbury, New Hampshire, 5877"
+ listCount(count:any) {
+  this.start = count
+  //this.start = this.start * this.pagesixe 
+  this.last = count * 20
+  if (this.last > this.items.length) {
+    this.last = this.items.length;
     }
-  ]
+    console.log('start'+ '      '+this.start + '      '+'last' + '      '+ this.last);
+  }
+  id:any;
+  title:any;
+  userid:any
+  completed:any;
+  addTableData() {
+    const obj = {
+      id: this.id,
+      title: this.title,
+      userId: this.userid,
+      completed: this.completed
+    }
+    this.items.push(obj);
+  }
+
+  deleteRow(i: any){
+   const message = confirm('Do you want to delete');
+   if(message == true) {
+    this.items.splice(i, 1);
+   }
+  } 
+
+  updateRow(i: any, name: string) {
+    this.items[i].id = name;
+  }
 }
 
