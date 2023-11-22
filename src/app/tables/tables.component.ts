@@ -20,6 +20,8 @@ export class TablesComponent implements OnInit{
   searchText: any;
   i: any;
   name!: string;
+  userId!: string;
+  updatedRow: any;
  
 constructor(private router: Router,private http: HttpClient){
   // for (let i = 1; i <= 100; i++) {
@@ -67,8 +69,11 @@ p: number = 1;
    }
   } 
 
-  updateRow(i: any, name: string) {
-    this.items[i].id = name;
+  updateRow(updatedRow: any): void {
+    const index = this.items.findIndex((item: any) => item.id === updatedRow.id);
+  if(index !== -1) {
+    this.items[index] = updatedRow;
+  }
   }
 }
 
